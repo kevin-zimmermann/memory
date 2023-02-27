@@ -1,16 +1,13 @@
 <?php
 require ('Card.php');
 session_start();
-//$cards = [];
-$card= new Card();
 
 for($i=0;$i < 9;$i++){
-
-    $_SESSION['id'.$i] = $i;
-    $_SESSION['image'.$i]= $i.".png";
+    $card[$i] = new Card();
+    $card[$i]->setId($i);
+    $card[$i]->setImage($i.".png");
 
 }
-var_dump($_SESSION);
 ?>
 
 
@@ -22,18 +19,37 @@ var_dump($_SESSION);
 </head>
 <body>
 <table>
+    <form method="get">
 <!--Génération du tableau-->
 <?php
-for ($x=0; $x <= 4; $x++) {
-    echo "<tr>";
 
-    for ($y=0; $y <= 3;$y++){
-        echo '<td>ligne '.$x.' , colonne '.$y.'</td>';
+foreach ($card as $key => $value){
+//    echo "<td>hello</td>";
+        echo '<tr><input type="submit" name="'.'card'.$key.'"> <img src="'.$card[$key]->getImage().'">'.'</input></tr>';
+if(!empty($_GET['card'.$key])){
+        if($_GET['card'.$key] == "Envoyer") {
+            $_SESSION['card' . $key] = $_GET['card' . $key];
+            if ($_GET['card' . $key]) {
+                echo '<tr><input type="submit" name="' . 'card' . $key . '"> <img src="back.jpg">' . '</input></tr>';
 
-    }
-    echo "</tr>";
+            } else {
+                echo '<tr><input type="submit" name="' . 'card' . $key . '"> <img src="' . $card[$key]->getImage() . '">' . '</input></tr>';
+
+            }
+        }
+
+
+        }
+//    for ($x=0; $x < 3; $x++) {
+//        echo "<td>";
+//
+//        echo "</td>";
+//    }
+
 }
+
  ?>
+    </form>
 </table>
 
 </body>
