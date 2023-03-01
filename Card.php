@@ -6,7 +6,6 @@ class Card
     private $id;
     private $image;
     private $state;
-    private $items;
 
     /**
      * @return mixed
