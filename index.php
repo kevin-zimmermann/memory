@@ -5,13 +5,20 @@ session_start();
 
 // On instancie notre classe Card
 if (!isset($card)) {
-        for ($i = 0; $i < 4; $i++) {
-                $card[$i] = new Card();
-            $card[$i]->setId($i);
-            $card[$i]->setImage($i . ".png");
-            $card[$i]->setState("hide");
+    for ($i = 0; $i < 4; $i++) {
+        $card[$i] = new Card();
+        $arrayCard[$i]= [];
+        $card[$i]->setId($i);
+        $card[$i]->setImage($i . ".png");
+        $card[$i]->setState("hide");
 
-        }
+        $cardId = $card[$i]->getId();
+        $cardImage = $card[$i]->getImage();
+        $cardState = $card[$i]->getState();
+        $arrayCard[$i] = ["id" => $cardId, "image"=> $cardImage, "state"=> $cardState];
+
+
+    }
 }
 
 ?>
@@ -28,23 +35,27 @@ if (!isset($card)) {
     <form method="get">
         <!--Génération du tableau-->
         <?php
-        $duplicateArray = duplicateArray($card);
+        $duplicateArray = duplicateArray($arrayCard);
         $RA = randomArray($duplicateArray);
+        $_SESSION['count'] = 0;
+
         if($RA){
             foreach ($RA as $key => $value) {
+
                 if (isset($_SESSION['clickedImg']['card' . $key])) {
-                    $RA[$key]->setState('visible');
-                    echo '<tr><img height="100px" src="' . $RA[$key]->getImage() . '">' . '</tr>';
+                    echo '<tr><img height="100px" src="' . $value['image'] . '">' . '</tr>';
 
 
                 } else {
                     if (isset($_GET['card' . $key])) {
-                        if ($_GET['card' . $key] == "Envoyer" && $RA[$key]->getState() == "hide") {
+                        if ($_GET['card' . $key] == $value['id']) {
                             $_SESSION['clickedImg']['card' . $key] = $_GET['card' . $key];
+                            $_SESSION['random'][$key]['state'] = "visible";
                             header('location:index');
                         }
+
                     }
-                    echo '<tr><input type="submit" name="' . 'card' . $key . '"> <img height="100px" src="back.jpg">' . '</input></tr>';
+                    echo '<tr><input type="submit" name="' . 'card' . $key . '" value ="'.$value['id'].'">  <img height="100px" src="back.jpg">' . '</input></tr>';
                 }
             }
         }
@@ -53,8 +64,8 @@ if (!isset($card)) {
         <?php
 
         resetGame();
-//        var_dump($_GET);
-//
+        //        var_dump($_GET);
+        //
         var_dump($_SESSION);
 
         function duplicateArray($array){
@@ -86,3 +97,4 @@ if (!isset($card)) {
 
 </body>
 </html>
+
